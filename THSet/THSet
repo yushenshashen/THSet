@@ -93,7 +93,7 @@ if __name__ == '__main__':
 	args = get_args()	
 
 	if len(sys.argv) < 2:
-		print '\tNo input, Please try parameter -h! '
+		print '\n\tNo input, Please try parameter -h! \n'
 	else:
 
 		#start
