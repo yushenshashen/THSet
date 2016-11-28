@@ -1,10 +1,10 @@
 # THSet
-
-  'THSet is a set of tools for UCSC genome browser track hub setting. 
+  '
+  THSet is a set of tools for UCSC genome browser track hub setting. 
   <br>Author: Peng Zhang (zhangpeng1334880@gmail.com)
   <br>version: 1.0
-  <br>Data: Nov 28,2016'
-
+  <br>Data: Nov 28,2016
+  '
 ##usage
 THSet [-h] [-v] [-G GENOMES] [-H HUB] [-O OUTPUT] [-E EMAIL]
 
