@@ -1,0 +1,118 @@
+#! /usr/bin/python
+_version_ = '1.0'
+
+import argparse
+import time
+import sys
+import os
+
+def get_args():
+
+	tool = os.path.basename(sys.argv[0])
+	parser = argparse.ArgumentParser(description='programm: '+ tool + ' (tools for set track hub parameters) \n\nversion: '+ _version_,prog=tool,formatter_class=argparse.RawTextHelpFormatter)
+	parser.add_argument('-v','--version',action='version',version='%(prog)s v'+_version_)
+
+	parser.add_argument('-G','--genomes',help='genome name (eg: hg19)',default='none')
+	parser.add_argument('-H','--hub',help='hub name (eg: my sample)',default='none')
+	parser.add_argument('-O','--output',help='output directory (eg: output/ remember the\'/\')',default='THset_output/')
+	parser.add_argument('-E','--email',help='email to contact (eg: xxx@xxx.com)',default='none')
+
+	args = parser.parse_args()
+	return args
+
+def check_args():
+	if args.genomes == 'none':
+		print '\tWARNING! No parameter {0}'.format('-G') 
+		return False
+
+	if args.hub == 'none':
+		print '\tWARNING! No parameter {0}'.format('-H') 
+		return False
+
+	# if args.output == './':
+	# 	print '\tWARNING! No parameter {0}'.format('-O') 
+	# 	return False
+
+	return True
+
+def mkdir_dirs(dir):
+	dir = dir.strip().rstrip()
+	if not os.path.exists(dir):
+		os.makedirs(dir)
+
+def write_files(output,content):
+	with open(output,'w') as f:
+		f.write(content)
+		# file = open(output,'w')
+		# file.writelines(content)
+		# file.close()
+
+def create_genomes_txt(dir,args):
+	output = dir + 'genomes.txt'
+	if not os.path.isfile(output):
+		content = 'genome {0}\ntrackDb {0}/trackDb.txt'.format(args.genomes)
+		write_files(output,content)
+	else:
+		print '\tWARNING! file ' + output + ' exists!'
+
+def create_hub_txt(dir,args):
+	output = dir + 'hub.txt'
+	if not os.path.isfile(output):
+		content = 'hub {0}\nshortLabel {0}_shortLabel\nlongLabel {0}_longLabel\ngenomesFile genomes.txt\nemail {1}'.format(args.hub,args.email)
+		write_files(output,content)
+	else:
+		print '\tWARNING! file ' + output + ' exists!'	
+			
+def create_trackDb_txt(dir,args):
+	output = dir + 'trackDb.txt'
+
+	if not os.path.isfile(output):
+		content = 'track {0}\nbigDataUrl {0}.bw\nshortLabel {0}_shortLabel\nlongLabel {0}_longLabel\ntype bigWig'.format(args.hub)
+		write_files(output,content)
+	else:
+		print '\tWARNING! file ' + output + ' exists!'
+
+def simply_mode(args):
+	flag = True
+	flag = check_args()
+
+	if flag == False:
+		print '\tSTOPPED! Please fix the problems above!' 
+	else:
+		hub_dir = args.output
+		mkdir_dirs(hub_dir)
+		sub_dir = hub_dir + args.genomes + '/'
+		mkdir_dirs(sub_dir)
+
+		create_genomes_txt(hub_dir,args)
+		create_hub_txt(hub_dir,args)
+		create_trackDb_txt(sub_dir,args)
+
+if __name__ == '__main__':
+
+	args = get_args()	
+
+	if len(sys.argv) < 2:
+		print '\tNo input, Please try parameter -h! '
+	else:
+
+		#start
+		print '*'*100
+		print 'Command:\n\t' + ' '.join(sys.argv[:])
+		print '*'*100
+		print 'Process:'
+		print '\tThe programm is begin at ' + time.strftime('%X',time.localtime())
+
+		#process
+		print '\tprocessing!	' + time.strftime('%X',time.localtime())
+		time.sleep(1)
+		print '\tprocessing!	' + time.strftime('%X',time.localtime())
+		
+		simply_mode(args)
+
+		#end
+		print '*'*100
+		print 'Results:'
+		print '\tThe programm is over at ' + time.strftime('%X',time.localtime())
+		print '*'*100
+
